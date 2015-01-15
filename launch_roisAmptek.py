@@ -1,6 +1,15 @@
-import sys
+import sys, os
 import PyQt4.Qt as Qt
+
+
+gui_path = os.path.abspath('./GUIS')
+sys.path.append(gui_path)
+
+lib_path = os.path.abspath('./lib')
+sys.path.append(lib_path)
+
 from  ui_roisAmptek import Ui_MainWindow
+from AmptekLib import  AmptekPX5
 
 
 class Form(Qt.QMainWindow, Ui_MainWindow):
@@ -9,6 +18,9 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.pushButton.setEnabled(False)
         self.dialog = Dialog()
+	
+	self.amptek = AmptekPX5('bl13amptek-lab')
+
         
         #In Initialize the GUI we read the Device Values
         self.readValues()
@@ -55,14 +67,12 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
     def readValues(self):
         cmd = ''
         for i in range(1,5):
-            minim = self.__getattribute__('spinSCA%dMin' %i).value()
-            maxim = self.__getattribute__('spinSCA%dMax' %i).value()
             cmd += "SCAI=%d;SCAL;SCAH;" %(i+1)
         cmd = cmd[:-1]
         print "Command to ask Actual Values:"
         print cmd
-        values = "SCAI=2;SCAL=1;SCAH=8192SCAI=3;SCAL=0;SCAH=8192SCAI=4;SCAL=0;SCAH=8192SCAI=5;SCAL=0;SCAH=8192"
-
+        values = "SCAI=2;SCAL=1;SCAH=8192;SCAI=3;SCAL=0;SCAH=8192;SCAI=4;SCAL=0;SCAH=8192;SCAI=5;SCAL=0;SCAH=8192"
+	
 
     def writeValues(self):
         cmd = 'AUO1=ICR;CON1=AUXOUT1;'
