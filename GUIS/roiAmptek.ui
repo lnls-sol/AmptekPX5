@@ -1,0 +1,351 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>460</width>
+    <height>249</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>SCA Amptek Utility</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="sizeIncrement" >
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout" >
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_3" >
+      <property name="sizeConstraint" >
+       <enum>QLayout::SetMaximumSize</enum>
+      </property>
+      <item>
+       <widget class="Line" name="line" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout" >
+        <item row="0" column="0" >
+         <widget class="QLabel" name="label_9" >
+          <property name="font" >
+           <font>
+            <weight>50</weight>
+            <italic>true</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text" >
+           <string>CHANNEL</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" >
+         <widget class="QLabel" name="label_10" >
+          <property name="font" >
+           <font>
+            <weight>50</weight>
+            <italic>true</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text" >
+           <string>LOW Threshold</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" >
+         <widget class="QLabel" name="label_5" >
+          <property name="font" >
+           <font>
+            <weight>50</weight>
+            <italic>true</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text" >
+           <string>HIGH Threshold</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QLabel" name="label" >
+          <property name="text" >
+           <string>SCA - 1</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2" >
+         <widget class="QSpinBox" name="spinSCA1Min" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3" >
+         <widget class="QSpinBox" name="spinSCA1Max" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+          <property name="value" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" >
+         <widget class="QLabel" name="label_2" >
+          <property name="text" >
+           <string>SCA - 2</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2" >
+         <widget class="QSpinBox" name="spinSCA2Min" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3" >
+         <widget class="QSpinBox" name="spinSCA2Max" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+          <property name="value" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" >
+         <widget class="QLabel" name="label_3" >
+          <property name="text" >
+           <string>SCA - 3</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="2" >
+         <widget class="QSpinBox" name="spinSCA3Min" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="3" >
+         <widget class="QSpinBox" name="spinSCA3Max" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+          <property name="value" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" >
+         <widget class="QLabel" name="label_4" >
+          <property name="text" >
+           <string>SCA - 4</string>
+          </property>
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2" >
+         <widget class="QSpinBox" name="spinSCA4Min" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="3" >
+         <widget class="QSpinBox" name="spinSCA4Max" >
+          <property name="alignment" >
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="accelerated" >
+           <bool>true</bool>
+          </property>
+          <property name="maximum" >
+           <number>8192</number>
+          </property>
+          <property name="value" >
+           <number>8192</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2" >
+         <widget class="Line" name="line_3" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3" >
+         <widget class="Line" name="line_4" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="Line" name="line_5" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" >
+         <widget class="Line" name="line_6" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1" >
+         <widget class="Line" name="line_7" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1" >
+         <widget class="Line" name="line_8" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" >
+         <widget class="Line" name="line_9" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" >
+         <widget class="Line" name="line_10" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" >
+         <widget class="Line" name="line_11" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" >
+         <widget class="Line" name="line_12" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <item>
+         <widget class="Line" name="line_2" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton" >
+          <property name="text" >
+           <string>Apply Changes!</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
