@@ -20,6 +20,7 @@ class AmptekPX5(object):
             pid2 = 4
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
         ack = self._sendCmd(cmd)
+        self.packet_proc.acknowledgePacket(ack)
         
     def _read(self):
         try:
@@ -55,34 +56,34 @@ class AmptekPX5(object):
 
 
 class PacketOffset(object):
-    SYNC1 = 1
-    SYNC2 = 2
-    PID1 = 3
-    PID2 = 4
-    LEN_MSB = 5
-    LEN_LSB = 6
-    DATA = 7
+    SYNC1 = 0
+    SYNC2 = 1
+    PID1 = 2
+    PID2 = 3
+    LEN_MSB = 4
+    LEN_LSB = 5
+    DATA = 6
     CKS_MSB = -2
     CKS_LSB = -1
     
 class ACK_VALUES(object):
-    OK = 1
-    SYNC_ERR = 2
-    PID_ERR = 3
-    LEN_ERR = 4
-    CHECKSUM_ERR = 5
-    BAD_PARAM = 6
-    BAD_HEX = 7
-    UNRECOGNIZED_CMD = 8
-    FPGA_ERR = 9
-    CP2201_NOT_FOUND = 10
-    SCOPED_DATA_NOT_AVAILABLE = 11
-    PC5_NOT_PRESENT = 12
-    OK_INTERFACE_SHERING_REQUEST = 13
-    BUSY = 14
-    I2C_ERR = 15
-    OK_FPGA_UPLOAD_ADDR = 16
-    NOT_SUPPORTED =17
+    OK = 0
+    SYNC_ERR = 1
+    PID_ERR = 2
+    LEN_ERR = 3
+    CHECKSUM_ERR = 4
+    BAD_PARAM = 5
+    BAD_HEX = 6
+    UNRECOGNIZED_CMD = 7
+    FPGA_ERR = 8
+    CP2201_NOT_FOUND = 9
+    SCOPED_DATA_NOT_AVAILABLE = 10
+    PC5_NOT_PRESENT = 11
+    OK_INTERFACE_SHERING_REQUEST = 12
+    BUSY = 13
+    I2C_ERR = 14
+    OK_FPGA_UPLOAD_ADDR = 15
+    NOT_SUPPORTED =16
 
 
 
@@ -122,7 +123,102 @@ class PacketProc(object):
         if cks != packet_cks:
             raise ValueError('CheckSum error')
         
-   
+    def acknowledgePacket(self, packet):
+        self._validateCheckSum(packet)
+        packet_type = ord(packet[PacketOffset.PID1])
+        if packet_type != 0xFF: #Acknolewledge PID
+            raise ValueError('The packet is not a acknowledge packet.')
+      
+        ack_type = ord(packet[PacketOffset.PID2])
+        
+        if ack_type in (ACK_VALUES.OK, ACK_VALUES.OK_FPGA_UPLOAD_ADDR,
+                        ACK_VALUES.OK_INTERFACE_SHERING_REQUEST):
+            return True
+        
+        elif ack_type == ACK_VALUES.SYNC_ERR:
+            msg = ('Sync bytes in Request Packet were not correct, and '
+                   'therefore, the Request Packet was rejected.')
+         
+        elif ack_type == ACK_VALUES.PID_ERR:
+            msg = ('PID1 & PID2 combination is not recognized as a valid '
+                   'Request Packet, and therefore, the Request Packet was '
+                   'rejected.')
+     
+        elif ack_type == ACK_VALUES.LEN_ERR:
+            msg = ('LEN field of the Request Packet was not consistent '
+                   'with Request Packet type defined by the PID1 & PID2 '
+                   'combination. It is not recognized as a valid Request '
+                   'Packet, and therefore, the Request Packet was '
+                   'rejected.')
+ 
+        elif ack_type == ACK_VALUES.LEN_ERR:
+            msg = ('LEN field of the Request Packet was not consistent '
+                   'with Request Packet type defined by the PID1 & PID2 '
+                   'combination. It is not recognized as a valid Request '
+                   'Packet, and therefore, the Request Packet was '
+                   'rejected.')
+          
+        elif ack_type == ACK_VALUES.CHECKSUM_ERR:
+            msg = ('Checksum of the Request Packet was incorrect, and '
+                   'therefore, the Request Packet was rejected.')
+                 
+        elif ack_type == ACK_VALUES.BAD_PARAM:
+            msg = 'Bad parameter.'
+         
+        elif ack_type == ACK_VALUES.BAD_HEX:
+            msg = ('Microcontroller or FPGA upload packets error: hex '
+                   'record contained in the data field of the Request '
+                   'Packet had a checksum or other structural error.')
+         
+        elif ack_type == ACK_VALUES.UNRECOGNIZED_CMD:
+            msg = 'Unrecognized command.'
+ 
+        elif ack_type == ACK_VALUES.FPGA_ERR:
+            mgs = 'FPGA initialization failed.'
+         
+        elif ack_type == ACK_VALUES.CP2201_NOT_FOUND:
+            msg = ('Set Ethernet Settings Request Packet was received, but an '
+                   'Ethernet controller was not detected on the DP5.')
+                
+        elif ack_type == ACK_VALUES.SCOPED_DATA_NOT_AVAILABLE:
+            msg = ('Send Scope Data Request Packet was received, but the '
+                   'digital oscilloscope has not triggered, so no data is '
+                   'available. The digital oscilloscope must be armed, '
+                   'and then a trigger must occur for data to be available.')
+         
+        elif ack_type == ACK_VALUES.PC5_NOT_PRESENT:
+            msg = ('ASCII command errors - the data field will contain the '
+                   'ASCII command and parameter which caused the error. '
+                   '"Bad Parameter" means that the parameter is not '
+                   'recognized or exceeds the range of the command. '
+                   '"Unrecognized Command" means that the 4-character command' 
+                   ' is not recognized. "PC5 Not Present" is returned if a PC5'
+                   ' is not mated to the DP5, and a command requiring a PC5 '
+                   'is sent. (i.e. "HVSE", Set High Voltage.) '
+                   '[A "Bad Parameter" ACK packet may also be returned for a '
+                   'malformed I2C Request Packet, in which case LEN=0.] '
+                   'If an incomplete or garbled command is returned in the '
+                   'data field, it may mean that the ASCII Configuration '
+                   'Packet has structural issues. (Disallowed whitespace, '
+                   'missing semicolon, etc.)')
+            
+        elif ack_type == ACK_VALUES.BUSY:
+            msg = 'Busy, another interface in use.'
+         
+        elif ack_type == ACK_VALUES.I2C_ERR:
+            msg = ('"I2C Transfer" Request Packet, but no I2C ACK was '
+                   'detected from an I2C Slave.')
+        
+        elif ack_type == ACK_VALUES.NOT_SUPPORTED:
+            msg = ('Request Packet has been recognized as valid by the '
+                   'firmware, but it is not supported by the installed FPGA '
+                   'version. Update the FPGA to the latest FP version.')
+  
+        else:
+            msg = 'Not recognized PID2 of the Acknowledge Package.'
+         
+        raise ValueError(msg)
+  
     def getPacket(self, pid1, pid2, data):
         cmd = ""
         cmd += chr(self.sync1)
@@ -146,7 +242,7 @@ class PacketProc(object):
     
     def getData(self, packet):
         self._validateCheckSum(packet)
-        data = packet[PacketOffset.LEN_LSB:PacketOffset.CKS_MSB]
+        data = packet[PacketOffset.DATA:PacketOffset.CKS_MSB]
         return data
         
     
