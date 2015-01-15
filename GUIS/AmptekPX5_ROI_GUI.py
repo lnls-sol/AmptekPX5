@@ -1,6 +1,16 @@
+#!/usr/bin/env python
+
 import sys
+import os
+import ConfigParser
 import PyQt4.Qt as Qt
 from  ui_roisAmptek import Ui_MainWindow
+import time
+
+
+lib_path = os.path.abspath('../lib')
+sys.path.append(lib_path)
+from AmptekLib import  AmptekPX5
 
 
 class Form(Qt.QMainWindow, Ui_MainWindow):
@@ -9,24 +19,41 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.pushButton.setEnabled(False)
         self.dialog = Dialog()
+        if not os.path.exists('config.cfg'):
+            raise RuntimeError('There is not config.cfg file')
+        config = ConfigParser.RawConfigParser()
+        config.read('config.cfg')
+        device_name = config.get('AmptekPX5', 'host')
+        timeout = config.getint('AmptekPX5', 'timeout')
+        self.amptek = AmptekPX5(device_name)
+        
         
         #In Initialize the GUI we read the Device Values
         self.readValues()
-      
+        
         #Signals from Low SCA
-        Qt.QObject.connect(self.spinSCA1Min, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA2Min, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA3Min, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA4Min, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
+        signal_name = 'valueChanged(int)'
+        Qt.QObject.connect(self.spinSCA1Min, Qt.SIGNAL(signal_name),
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA2Min, Qt.SIGNAL(signal_name),
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA3Min, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA4Min, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
       
         #Signals from High SCA
-        Qt.QObject.connect(self.spinSCA1Max, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA2Max, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA3Max, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
-        Qt.QObject.connect(self.spinSCA4Max, Qt.SIGNAL("valueChanged(int)"), self.roisChanged)
+        Qt.QObject.connect(self.spinSCA1Max, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA2Max, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA3Max, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
+        Qt.QObject.connect(self.spinSCA4Max, Qt.SIGNAL(signal_name), 
+                           self.roisChanged)
       
-        Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), self.applyChanges)
-
+        Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
+                           self.applyChanges)
 
 
     def roisChanged(self, index):
@@ -55,26 +82,39 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
     def readValues(self):
         cmd = ''
         for i in range(1,5):
-            minim = self.__getattribute__('spinSCA%dMin' %i).value()
-            maxim = self.__getattribute__('spinSCA%dMax' %i).value()
-            cmd += "SCAI=%d;SCAL;SCAH;" %(i+1)
-        cmd = cmd[:-1]
+            cmd += 'SCAI=%d;SCAL;SCAH;' %(i+1)
         print "Command to ask Actual Values:"
-        print cmd
-        values = "SCAI=2;SCAL=1;SCAH=8192SCAI=3;SCAL=0;SCAH=8192SCAI=4;SCAL=0;SCAH=8192SCAI=5;SCAL=0;SCAH=8192"
-
-
+        for i in range(10):
+            data = self.amptek.readTextConfig(cmd)
+            if data: 
+                break
+        else:
+            msg = 'There is problem with the communication. Restart the HW.'
+            self.dialog.message.setText(msg)
+            self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
+            self.dialog.show()
+            return
+        
+        values = [value.split('=')[1] 
+                  for index,value in enumerate(data[:-1].split(';')) 
+                  if index not in (0,3,6,9)]
+        for i in range(1,5):
+            low = int(values[2*i-2])
+            high = int(values[2*i-1])
+            
+            self.__getattribute__('spinSCA%dMin' %i).setValue(low)
+            self.__getattribute__('spinSCA%dMax' %i).setValue(high)
+        
     def writeValues(self):
         cmd = 'AUO1=ICR;CON1=AUXOUT1;'
         for i in range(1,5):
             minim = self.__getattribute__('spinSCA%dMin' %i).value()
             maxim = self.__getattribute__('spinSCA%dMax' %i).value()
             cmd += "SCAI=%d;SCAL=%d;SCAH=%d;" %(i+1, minim, maxim)
-        cmd = cmd[:-1]
         print "Command to write values in Device:"
-        print cmd
-
-
+        self.amptek.writeTextConfig(cmd, False)
+        self.readValues()
+        
   
 class Dialog(Qt.QDialog):
     def __init__(self, parent=None):
