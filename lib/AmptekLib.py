@@ -27,6 +27,9 @@ class AmptekPX5(object):
         pid2 = 3
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
         raw_data = self._sendCmd(cmd)
+        if raw_data == None:
+            print 'Amptek did not send packet'
+            return ''
         data = self.packet_proc.getData(raw_data)
         return data
     
@@ -53,6 +56,7 @@ class AmptekPX5(object):
     def _close(self):
         if self.dev_socket != None:
             result = self.dev_socket.close()
+            print 'socket closed'
         else:
             print 'enter to close but there is not socket.'
                  
