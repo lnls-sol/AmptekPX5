@@ -9,6 +9,10 @@ AcknowlegePackage = struct.pack('BBBBBBBB',0xf5,0xfa,0xff,0, 0, 0,0xfd, 0x12)
 if __name__ == '__main__':
     amptek_comm = AmptekPX5('bl13amptek-lab', timeout=1)
     cmd = 'CLCK=80;SCAI=1;SCAL=2;SCAH=41;'
-    amptek_comm.sendTextConfig(cmd)
+    amptek_comm.writeTextConfig(cmd)
     result = amptek_comm._sendCmd(ClockWritePackage)
     print result == AcknowlegePackage   
+    cmd1 = 'CLCK;SCAI=1;SCAL;SCAH;'
+    data = amptek_comm.readTextConfig(cmd1)
+    print data
+    print data == cmd

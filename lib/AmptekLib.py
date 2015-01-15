@@ -13,7 +13,7 @@ class AmptekPX5(object):
         print '%s socket created\n' % repr(self.dev_socket.getsockname())
         self.packet_proc = PacketProc()
         
-    def sendTextConfig(self, cmds, write_eeprom=True):
+    def writeTextConfig(self, cmds, write_eeprom=True):
         pid1 = 0x20
         pid2 = 2
         if not write_eeprom:
@@ -21,7 +21,15 @@ class AmptekPX5(object):
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
         ack = self._sendCmd(cmd)
         self.packet_proc.acknowledgePacket(ack)
-        
+    
+    def readTextConfig(self, cmds):
+        pid1 = 0x20
+        pid2 = 3
+        cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
+        raw_data = self._sendCmd(cmd)
+        data = self.packet_proc.getData(raw_data)
+        return data
+    
     def _read(self):
         try:
             result, socket_rsv = self.dev_socket.recvfrom(self.buff)
