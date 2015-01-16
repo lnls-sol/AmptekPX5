@@ -2,6 +2,7 @@
 
 import sys
 import os
+import time
 import ConfigParser
 import PyQt4.Qt as Qt
 from  ui_roisAmptek import Ui_MainWindow
@@ -17,7 +18,6 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None, designMode=False):
         Qt.QMainWindow.__init__(self, parent)
         self.setupUi(self)
-        self.pushButton.setEnabled(False)
         self.dialog = Dialog()
         if not os.path.exists('config.cfg'):
             raise RuntimeError('There is not config.cfg file')
@@ -27,37 +27,9 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         timeout = config.getint('AmptekPX5', 'timeout')
         self.amptek = AmptekPX5(device_name)
         
-        
         #In Initialize the GUI we read the Device Values
         self.readValues()
         
-        #Signals from Low SCA
-        signal_name = 'valueChanged(int)'
-        Qt.QObject.connect(self.spinSCA1Min, Qt.SIGNAL(signal_name),
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA2Min, Qt.SIGNAL(signal_name),
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA3Min, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA4Min, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-      
-        #Signals from High SCA
-        Qt.QObject.connect(self.spinSCA1Max, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA2Max, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA3Max, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-        Qt.QObject.connect(self.spinSCA4Max, Qt.SIGNAL(signal_name), 
-                           self.roisChanged)
-      
-        Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
-                           self.applyChanges)
-
-
-    def roisChanged(self, index):
-        self.pushButton.setEnabled(True)        
 
     def applyChanges(self):
         error = False
@@ -83,8 +55,9 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         cmd = ''
         for i in range(1,5):
             cmd += 'SCAI=%d;SCAL;SCAH;' %(i+1)
-        print "Command to ask Actual Values:"
+        print "Asking to Device..."
         for i in range(10):
+	    time.sleep(0.5)
             data = self.amptek.readTextConfig(cmd)
             if data: 
                 break
