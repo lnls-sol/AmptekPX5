@@ -28,8 +28,9 @@ class AmptekPX5(object):
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
         raw_data = self._sendCmd(cmd)
         if raw_data == None:
-            print 'Amptek did not send packet'
-            return ''
+            msg = 'Amptek did not send packet'
+            print msg
+            raise RuntimeError(msg)
         data = self.packet_proc.getData(raw_data)
         return data
     
