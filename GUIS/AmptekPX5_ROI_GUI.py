@@ -29,7 +29,9 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         
         #In Initialize the GUI we read the Device Values
         self.readValues()
-        
+        Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
+                           self.applyChanges)
+  
 
     def applyChanges(self):
         error = False
