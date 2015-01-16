@@ -57,16 +57,17 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
             cmd += 'SCAI=%d;SCAL;SCAH;' %(i+1)
         print "Asking to Device..."
         for i in range(10):
-	    time.sleep(0.5)
-            data = self.amptek.readTextConfig(cmd)
-            if data: 
-                break
-        else:
-            msg = 'There is problem with the communication. Restart the HW.'
-            self.dialog.message.setText(msg)
-            self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
-            self.dialog.show()
-            return
+            
+            try:
+                data = self.amptek.readTextConfig(cmd)
+            except:
+                if i == 9:
+                    msg = ('There is problem with the communication. '
+                           'Restart the HW.')
+                    self.dialog.message.setText(msg)
+                    self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
+                    self.dialog.show()
+                    return
         
         values = [value.split('=')[1] 
                   for index,value in enumerate(data[:-1].split(';')) 
