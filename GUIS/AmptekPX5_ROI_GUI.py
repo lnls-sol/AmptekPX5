@@ -85,7 +85,7 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
             maxim = self.__getattribute__('spinSCA%dMax' %i).value()
             cmd += "SCAI=%d;SCAL=%d;SCAH=%d;" %(i+1, minim, maxim)
         print "Command to write values in Device:"
-        self.amptek.writeTextConfig(cmd, False)
+        self.amptek.writeTextConfig(cmd)
         self.readValues()
         
   
