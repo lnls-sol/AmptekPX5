@@ -19,6 +19,7 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         Qt.QMainWindow.__init__(self, parent)
         self.setupUi(self)
         self.dialog = Dialog()
+        self.dialogRefresh = Qt.QDialog()
         if not os.path.exists('config.cfg'):
             raise RuntimeError('There is not config.cfg file')
         config = ConfigParser.RawConfigParser()
@@ -31,8 +32,18 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         self.readValues()
         Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
                            self.applyChanges)
+        Qt.QObject.connect(self.pushButton_2, Qt.SIGNAL("clicked()"), 
+                           self.refreshValues)
   
-
+    def refreshValues(self):
+        msg = "\nConnecting to Amptek...\n"
+        
+        self.dialogRefresh.message.setText(msg)
+        self.dialogRefresh.message.setAlignment(Qt.Qt.AlignCenter)
+        self.dialogRefresh.show()
+        self.readValues()
+        self.dialogRefresh.close()
+            
     def applyChanges(self):
         error = False
 
