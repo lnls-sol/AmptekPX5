@@ -19,7 +19,6 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         Qt.QMainWindow.__init__(self, parent)
         self.setupUi(self)
         self.dialog = Dialog()
-        self.dialogRefresh = Qt.QDialog()
         if not os.path.exists('config.cfg'):
             raise RuntimeError('There is not config.cfg file')
         config = ConfigParser.RawConfigParser()
@@ -32,17 +31,8 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         self.readValues()
         Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
                            self.applyChanges)
-        Qt.QObject.connect(self.pushButton_2, Qt.SIGNAL("clicked()"), 
-                           self.refreshValues)
-  
-    def refreshValues(self):
-        msg = "\nConnecting to Amptek...\n"
-        
-        self.dialogRefresh.message.setText(msg)
-        self.dialogRefresh.message.setAlignment(Qt.Qt.AlignCenter)
-        self.dialogRefresh.show()
-        self.readValues()
-        self.dialogRefresh.close()
+        Qt.QObject.connect(self.RefreshButton, Qt.SIGNAL("clicked()"), 
+                           self.readValues)
             
     def applyChanges(self):
         error = False
@@ -81,7 +71,7 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
                     self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
                     self.dialog.show()
                     return
-        
+        print "Received Values ..."
         values = [value.split('=')[1] 
                   for index,value in enumerate(data[:-1].split(';')) 
                   if index not in (0,3,6,9)]
@@ -101,8 +91,9 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         print "Command to write values in Device:"
         self.amptek.writeTextConfig(cmd)
         self.readValues()
-        
-  
+
+
+
 class Dialog(Qt.QDialog):
     def __init__(self, parent=None):
         super(Dialog, self).__init__(parent)
