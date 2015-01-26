@@ -83,11 +83,11 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
             self.__getattribute__('spinSCA%dMax' %i).setValue(high)
         
     def writeValues(self):
-        cmd = 'AUO1=ICR;CON1=AUXOUT1;'
+        cmd = 'AUO1=ICR;CON1=AUXOUT1;SCAI1=1;SCAL=0;SCAH=8191;SCAO=HIGH;SCAW=100;'
         for i in range(1,5):
             minim = self.__getattribute__('spinSCA%dMin' %i).value()
             maxim = self.__getattribute__('spinSCA%dMax' %i).value()
-            cmd += "SCAI=%d;SCAL=%d;SCAH=%d;" %(i+1, minim, maxim)
+            cmd += "SCAI=%d;SCAL=%d;SCAH=%d;SCAO=HIGH;SCAW=100;" %(i+1, minim, maxim)
         print "Command to write values in Device:"
         self.amptek.writeTextConfig(cmd)
         self.readValues()
