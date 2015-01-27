@@ -29,15 +29,15 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         
         #In Initialize the GUI we read the Device Values
         self.readValues()
-        Qt.QObject.connect(self.pushButton, Qt.SIGNAL("clicked()"), 
+        Qt.QObject.connect(self.pushButton, Qt.SIGNAL('clicked()'), 
                            self.applyChanges)
-        Qt.QObject.connect(self.RefreshButton, Qt.SIGNAL("clicked()"), 
+        Qt.QObject.connect(self.RefreshButton, Qt.SIGNAL('clicked()'), 
                            self.readValues)
             
     def applyChanges(self):
         error = False
 
-        #Check for each sca that the Low Threshold are lower than High Threshold
+        #Check for all SCA that Low Threshold is lower than High Threshold
         for i in range(1,5):
           minim = self.__getattribute__('spinSCA%dMin' %i).value()
           maxim = self.__getattribute__('spinSCA%dMax' %i).value()
@@ -46,7 +46,8 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
               error = True
 
         if error:
-           msg = "\nError in Values. \n Any of Low Thresholds are Equal/Higher than High Thresholds.\n"
+           msg = ('\nError in Values. \n Any of Low Thresholds are '
+                  'Equal/Higher than High Thresholds.\n')
            self.dialog.message.setText(msg)
            self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
            self.dialog.show()
@@ -58,7 +59,7 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         cmd = ''
         for i in range(1,5):
             cmd += 'SCAI=%d;SCAL;SCAH;' %(i+1)
-        print "Asking to Device..."
+        print 'Asking to Device...'
         for i in range(10):
             
             try:
@@ -71,24 +72,27 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
                     self.dialog.message.setAlignment(Qt.Qt.AlignCenter)
                     self.dialog.show()
                     return
-        print "Received Values ..."
+        print 'Received Values: %s' % data
         values = [value.split('=')[1] 
                   for index,value in enumerate(data[:-1].split(';')) 
                   if index not in (0,3,6,9)]
         for i in range(1,5):
             low = int(values[2*i-2])
             high = int(values[2*i-1])
-            
             self.__getattribute__('spinSCA%dMin' %i).setValue(low)
             self.__getattribute__('spinSCA%dMax' %i).setValue(high)
         
     def writeValues(self):
-        cmd = 'AUO1=ICR;CON1=AUXOUT1;SCAI1=1;SCAL=0;SCAH=8191;SCAO=HIGH;SCAW=100;'
+        #Configure the ICR and the first SCA as TCR
+        cmd = ('AUO1=ICR;CON1=AUXOUT1;SCAI=1;SCAL=0;SCAH=8191;'
+               'SCAO=HIGH;SCAW=100;')
         for i in range(1,5):
             minim = self.__getattribute__('spinSCA%dMin' %i).value()
             maxim = self.__getattribute__('spinSCA%dMax' %i).value()
-            cmd += "SCAI=%d;SCAL=%d;SCAH=%d;SCAO=HIGH;SCAW=100;" %(i+1, minim, maxim)
-        print "Command to write values in Device:"
+            cmd += ('SCAI=%d;SCAL=%d;SCAH=%d;SCAO=HIGH;SCAW=100;' 
+                    %(i+1, minim, maxim))
+        print 'Command to write values in Device:'
+        print cmd
         self.amptek.writeTextConfig(cmd)
         self.readValues()
 
