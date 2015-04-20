@@ -1,17 +1,21 @@
 import socket
 import struct
 import time
+import logging
 
 class AmptekPX5(object):
     buff = 1000
     
-    def __init__(self, host, port=10001, timeout=3):
+    def __init__(self, host, port=10001, timeout=3, nr_tries=2):
         self.addr = (host,port)
         self.dev_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.dev_socket.settimeout(timeout)
         self.dev_socket.connect(self.addr)
-        print '%s socket created\n' % repr(self.dev_socket.getsockname())
+        logging.debug('%s socket created\n' % 
+                      repr(self.dev_socket.getsockname()))
+                      
         self.packet_proc = PacketProc()
+        self.nr_tries = nr_tries
         
     def writeTextConfig(self, cmds, write_eeprom=True):
         pid1 = 0x20
@@ -26,10 +30,14 @@ class AmptekPX5(object):
         pid1 = 0x20
         pid2 = 3
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
-        raw_data = self._sendCmd(cmd)
-        if raw_data == None:
-            msg = 'Amptek did not send packet'
-            print msg
+        for i in range(self.nr_tries):
+            raw_data = self._sendCmd(cmd)
+            if raw_data != None:
+                break
+        else:
+            msg = ('There is problem with the communication, Amptek did not'
+                   'send a packet. Turn off the Windows program, if it does '
+                   'not work, restart the Amptek.')
             raise RuntimeError(msg)
         data = self.packet_proc.getData(raw_data)
         return data
@@ -54,18 +62,18 @@ class AmptekPX5(object):
             return self._read()
         return None
     
-    def _close(self):
+    def close(self):
         if self.dev_socket != None:
             result = self.dev_socket.close()
-            print 'socket closed'
+            logging.debug( 'socket closed')
         else:
-            print 'enter to close but there is not socket.'
+            logging.debug('enter to close but there is not socket.')
                  
     def __exit__(self):
-        self._close()
+        self.close()
         
     def __del__(self):
-        self._close()
+        self.close()
 
 
 class PacketOffset(object):
