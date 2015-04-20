@@ -23,7 +23,16 @@ class AmptekPX5(object):
         if not write_eeprom:
             pid2 = 4
         cmd = self.packet_proc.getPacket(pid1, pid2, cmds)
-        ack = self._sendCmd(cmd)
+        for i in range(self.nr_tries):
+            ack = self._sendCmd(cmd) 
+            if ack != None:
+                break
+        else:
+            msg = ('There is problem with the communication, Amptek did not '
+                   'send the acknoledgepacket. Turn off the Windows program, '
+                   'if it does not work, restart the Amptek.')
+            raise RuntimeError(msg)
+
         self.packet_proc.acknowledgePacket(ack)
     
     def readTextConfig(self, cmds):
@@ -35,7 +44,7 @@ class AmptekPX5(object):
             if raw_data != None:
                 break
         else:
-            msg = ('There is problem with the communication, Amptek did not'
+            msg = ('There is problem with the communication, Amptek did not '
                    'send a packet. Turn off the Windows program, if it does '
                    'not work, restart the Amptek.')
             raise RuntimeError(msg)
