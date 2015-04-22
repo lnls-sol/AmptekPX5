@@ -124,9 +124,9 @@ class amptekRois(Macro,AmptekMacro):
 class amptekConf(Macro,AmptekMacro):
     """
     This macro configure the Amptek parameters:
-    * Course Gain (GAIN): 0 to 28 
-    * Peaking Time (PEAKTIME):  
-    * Low threshold (BACKGROUND)
+    * Course Gain (GAIN)  
+    * Peaking Time (PT)  
+    * Low threshold (BGR)
     * Number of channels (MCAC): 512, 1024, 2046, 4096, 8192
       
     
@@ -135,13 +135,13 @@ class amptekConf(Macro,AmptekMacro):
     
     """
     PARAMS_CMD ={'GAIN':'GAIN',
-                 'PEAKTIME':'TPEA',
+                 'PT':'TPEA',
                  'MCAC':'MCAC',
-                 'BACKGROUND': 'THSL'}
+                 'BGR': 'THSL'}
     param_def = [
         ['param_list',ParamRepeat(['Param', Type.String, None, 
                                    ('Name of the parameter (GAIN, MCAC, '
-                                    'PEAKTIME and BACKGROUND)')],
+                                    'PT and BGD)')],
                                   ['Value', Type.Float, None, 'Value '],
                                   min=0, max=4), 
         None, 'List of parameters, example: sca1 100 800']]
