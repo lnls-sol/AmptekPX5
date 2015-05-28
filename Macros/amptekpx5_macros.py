@@ -124,7 +124,7 @@ class amptekRois(Macro,AmptekMacro):
 class amptekConf(Macro,AmptekMacro):
     """
     This macro configure the Amptek parameters:
-    * Course Gain (GAIN)  
+    * Total Gain (GAIN)  
     * Peaking Time (PT)  
     * Low threshold (BGR)
     * Number of channels (MCAC): 512, 1024, 2046, 4096, 8192
