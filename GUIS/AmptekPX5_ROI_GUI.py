@@ -26,19 +26,19 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         device_name = config.get('AmptekPX5', 'host')
         timeout = config.getint('AmptekPX5', 'timeout')
         self.amptek = AmptekPX5(device_name)
-        
+
         #In Initialize the GUI we read the Device Values
         self.readValues()
-        Qt.QObject.connect(self.pushButton, Qt.SIGNAL('clicked()'), 
+        Qt.QObject.connect(self.pushButton, Qt.SIGNAL('clicked()'),
                            self.applyChanges)
-        Qt.QObject.connect(self.RefreshButton, Qt.SIGNAL('clicked()'), 
+        Qt.QObject.connect(self.RefreshButton, Qt.SIGNAL('clicked()'),
                            self.readValues)
-            
+
     def applyChanges(self):
         error = False
 
         #Check for all SCA that Low Threshold is lower than High Threshold
-        for i in range(1,5):
+        for i in range(1,9):
           minim = self.__getattribute__('spinSCA%dMin' %i).value()
           maxim = self.__getattribute__('spinSCA%dMax' %i).value()
           ##Is not possible that the LOW Threshold is lower than HIGH Threshold
@@ -54,14 +54,13 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
         else:
            #print "The values are correct, sending command to Amptek..."
            self.writeValues()
-            
+
     def readValues(self):
         cmd = ''
-        for i in range(1,5):
-            cmd += 'SCAI=%d;SCAL;SCAH;' %(i+1)
+        for i in range(1,9):
+            cmd += 'SCAI=%d;SCAL;SCAH;' %i
         print 'Asking to Device...'
         for i in range(10):
-            
             try:
                 data = self.amptek.readTextConfig(cmd)
             except:
@@ -73,24 +72,25 @@ class Form(Qt.QMainWindow, Ui_MainWindow):
                     self.dialog.show()
                     return
         print 'Received Values: %s' % data
-        values = [value.split('=')[1] 
-                  for index,value in enumerate(data[:-1].split(';')) 
-                  if index not in (0,3,6,9)]
-        for i in range(1,5):
-            low = int(values[2*i-2])
-            high = int(values[2*i-1])
+        values = [value.split('=')[1]
+                  for index,value in enumerate(data[:-1].split(';'))
+                  if index not in (0,3,6,9,12,15,18,21)]
+        print values
+        for i in range(1,9):
+            low = int(values[2*(i-1)])
+            high = int(values[2*(i-1) +1])
             self.__getattribute__('spinSCA%dMin' %i).setValue(low)
             self.__getattribute__('spinSCA%dMax' %i).setValue(high)
-        
+
     def writeValues(self):
         #Configure the ICR and the first SCA as TCR
         cmd = ('AUO1=ICR;CON1=AUXOUT1;SCAI=1;SCAL=0;SCAH=8191;'
                'SCAO=HIGH;SCAW=100;')
-        for i in range(1,5):
+        for i in range(1,9):
             minim = self.__getattribute__('spinSCA%dMin' %i).value()
             maxim = self.__getattribute__('spinSCA%dMax' %i).value()
-            cmd += ('SCAI=%d;SCAL=%d;SCAH=%d;SCAO=HIGH;SCAW=100;' 
-                    %(i+1, minim, maxim))
+            cmd += ('SCAI=%d;SCAL=%d;SCAH=%d;SCAO=HIGH;SCAW=100;'
+                    %(i, minim, maxim))
         print 'Command to write values in Device:'
         print cmd
         self.amptek.writeTextConfig(cmd)
@@ -103,7 +103,7 @@ class Dialog(Qt.QDialog):
         super(Dialog, self).__init__(parent)
          # Create widgets
         self.message = Qt.QLabel("Write my name here")
-        self.button = Qt.QPushButton("OK")        
+        self.button = Qt.QPushButton("OK")
         self.setWindowTitle("NOTICE:")
         # Create layout and add widgets
         layout = Qt.QVBoxLayout()
@@ -117,10 +117,10 @@ class Dialog(Qt.QDialog):
         Qt.QObject.connect(self.button, Qt.SIGNAL("clicked()"), self.greetings)
 
         #self.button.clicked.connect(self.greetings)
-       
+
     # Greets the user
     def greetings(self):
-        self.close()        
+        self.close()
 def main():
     app = Qt.QApplication(sys.argv)
     w = Form(None)

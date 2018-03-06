@@ -58,6 +58,10 @@ class Ui_MainWindow(object):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.gridLayout.addWidget(self.label_5, 0, 3, 1, 1)
+
+
+
+
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 2, 0, 1, 1)
@@ -114,6 +118,70 @@ class Ui_MainWindow(object):
         self.spinSCA4Max.setProperty("value", QtCore.QVariant(8192))
         self.spinSCA4Max.setObjectName("spinSCA4Max")
         self.gridLayout.addWidget(self.spinSCA4Max, 8, 3, 1, 1)
+
+
+
+
+        self.label_11 = QtGui.QLabel(self.centralwidget)
+        self.label_11.setObjectName("label_11")
+        self.gridLayout.addWidget(self.label_11, 10, 0, 1, 1)
+        self.spinSCA5Min = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA5Min.setAccelerated(True)
+        self.spinSCA5Min.setMaximum(8192)
+        self.spinSCA5Min.setObjectName("spinSCA5Min")
+        self.gridLayout.addWidget(self.spinSCA5Min, 10, 2, 1, 1)
+        self.spinSCA5Max = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA5Max.setAccelerated(True)
+        self.spinSCA5Max.setMaximum(8192)
+        self.spinSCA5Max.setProperty("value", QtCore.QVariant(8192))
+        self.spinSCA5Max.setObjectName("spinSCA5Max")
+        self.gridLayout.addWidget(self.spinSCA5Max, 10, 3, 1, 1)
+        self.label_12 = QtGui.QLabel(self.centralwidget)
+        self.label_12.setObjectName("label_12")
+        self.gridLayout.addWidget(self.label_12, 12, 0, 1, 1)
+        self.spinSCA6Min = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA6Min.setAccelerated(True)
+        self.spinSCA6Min.setMaximum(8192)
+        self.spinSCA6Min.setObjectName("spinSCA6Min")
+        self.gridLayout.addWidget(self.spinSCA6Min, 12, 2, 1, 1)
+        self.spinSCA6Max = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA6Max.setAccelerated(True)
+        self.spinSCA6Max.setMaximum(8192)
+        self.spinSCA6Max.setProperty("value", QtCore.QVariant(8192))
+        self.spinSCA6Max.setObjectName("spinSCA6Max")
+        self.gridLayout.addWidget(self.spinSCA6Max, 12, 3, 1, 1)
+        self.label_13 = QtGui.QLabel(self.centralwidget)
+        self.label_13.setObjectName("label_13")
+        self.gridLayout.addWidget(self.label_13, 14, 0, 1, 1)
+        self.spinSCA7Min = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA7Min.setAccelerated(True)
+        self.spinSCA7Min.setMaximum(8192)
+        self.spinSCA7Min.setObjectName("spinSCA7Min")
+        self.gridLayout.addWidget(self.spinSCA7Min, 14, 2, 1, 1)
+        self.spinSCA7Max = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA7Max.setAccelerated(True)
+        self.spinSCA7Max.setMaximum(8192)
+        self.spinSCA7Max.setProperty("value", QtCore.QVariant(8192))
+        self.spinSCA7Max.setObjectName("spinSCA7Max")
+        self.gridLayout.addWidget(self.spinSCA7Max, 14, 3, 1, 1)
+        self.label_14 = QtGui.QLabel(self.centralwidget)
+        self.label_14.setObjectName("label_14")
+        self.gridLayout.addWidget(self.label_14, 16, 0, 1, 1)
+        self.spinSCA8Min = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA8Min.setAccelerated(True)
+        self.spinSCA8Min.setMaximum(8192)
+        self.spinSCA8Min.setObjectName("spinSCA8Min")
+        self.gridLayout.addWidget(self.spinSCA8Min, 16, 2, 1, 1)
+        self.spinSCA8Max = QtGui.QSpinBox(self.centralwidget)
+        self.spinSCA8Max.setAccelerated(True)
+        self.spinSCA8Max.setMaximum(8192)
+        self.spinSCA8Max.setProperty("value", QtCore.QVariant(8192))
+        self.spinSCA8Max.setObjectName("spinSCA8Max")
+        self.gridLayout.addWidget(self.spinSCA8Max, 16, 3, 1, 1)
+
+
+
+        """
         self.line_3 = QtGui.QFrame(self.centralwidget)
         self.line_3.setFrameShape(QtGui.QFrame.HLine)
         self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
@@ -164,7 +232,10 @@ class Ui_MainWindow(object):
         self.line_12.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_12.setObjectName("line_12")
         self.gridLayout.addWidget(self.line_12, 7, 0, 1, 1)
+        """
+
         self.verticalLayout_3.addLayout(self.gridLayout)
+
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.line_2 = QtGui.QFrame(self.centralwidget)
@@ -172,6 +243,7 @@ class Ui_MainWindow(object):
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
         self.verticalLayout_2.addWidget(self.line_2)
+
         self.pushButton = QtGui.QPushButton(self.centralwidget)
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout_2.addWidget(self.pushButton)
@@ -197,6 +269,10 @@ class Ui_MainWindow(object):
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "SCA - 2", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("MainWindow", "SCA - 3", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("MainWindow", "SCA - 4", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_11.setText(QtGui.QApplication.translate("MainWindow", "SCA - 5", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_12.setText(QtGui.QApplication.translate("MainWindow", "SCA - 6", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_13.setText(QtGui.QApplication.translate("MainWindow", "SCA - 7", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_14.setText(QtGui.QApplication.translate("MainWindow", "SCA - 8", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Apply Changes!", None, QtGui.QApplication.UnicodeUTF8))
         self.RefreshButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh Values", None, QtGui.QApplication.UnicodeUTF8))
 

@@ -92,7 +92,7 @@ class amptekRois(Macro,AmptekMacro):
     
     """
     #There is only for SCA connected to the NI6601 and it is the same as the GUI
-    LAST_SCA=4
+    LAST_SCA=8
     param_def = [
         ['sca_list',ParamRepeat(['Number', Type.Integer, None, 'SCA channel'],
                      ['Low_Value', Type.Integer, None, 'Low threshold '],
